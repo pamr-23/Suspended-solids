@@ -1,0 +1,77 @@
+library(ggplot2)
+
+# Gráfico de líneas por estación
+ggplot(estaciones_ordenadas, aes(x = Año, y = SS, color = ESTACIONES, group = ESTACIONES)) +
+  geom_line() +
+  labs(x = "Año", y = "Sólidos suspendidos (mg/L)", color = "Estación",
+       title = "Evolución de los sólidos suspendidos por estación")
+
+#histograma 
+library(ggplot2)
+
+estaciones_ordenadas$ESTACIONES <- factor(estaciones_ordenadas$ESTACIONES, levels = paste0("E", 1:20))
+
+ggplot(estaciones_ordenadas, aes(x = SS, fill = ESTACIONES)) +
+  geom_histogram(binwidth = 5) +
+  facet_wrap(~ ESTACIONES, ncol = 4) +
+  labs(x = "Sólidos suspendidos (mg/L)", y = "Frecuencia", fill = "Estación",
+       title = "Distribución de sólidos suspendidos por estación") +
+  theme_minimal() +
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggsave("mi_grafico.png", width = 12, height = 8)
+
+#cajas
+ggplot(estaciones_ordenadas, aes(x = ESTACIONES, y = SS)) +
+  geom_boxplot(fill = "lightblue", notch = TRUE) +
+  geom_jitter(width = 0.2, alpha = 0.3, color = "gray") +
+  labs(x = "Estaciones", y = "Sólidos suspendidos (mg/L)",
+       title = "Distribución de sólidos suspendidos por estación") +
+  theme_classic()
+#promedio general
+
+promedio_general <- mean(estaciones_ordenadas$SS)
+
+ggplot(estaciones_ordenadas, aes(x = SS)) +
+  geom_histogram(binwidth = 10, fill = "lightblue") +
+  geom_vline(xintercept = promedio_general, color = "red") +
+  labs(x = "Sólidos suspendidos (mg/L)", y = "Frecuencia",
+       title = "Distribución de sólidos suspendidos")
+
+# Calcular el promedio por estación
+promedio_por_estacion <- tapply(estaciones_ordenadas$SS, estaciones_ordenadas$ESTACIONES, mean)
+print(promedio_por_estacion)
+ggplot(data.frame(estacion = names(promedio_por_estacion), promedio = promedio_por_estacion), 
+       aes(x = reorder(estacion, promedio), y = promedio)) +
+  geom_col(fill = "steelblue") +
+  labs(x = "Estación", y = "Promedio de sólidos suspendidos",
+       title = "Promedio de sólidos suspendidos por estación") +
+  theme_classic()
+
+#grafico violin
+
+ggplot(estaciones_ordenadas, aes(x = ESTACIONES, y = SS)) +
+  geom_violin() +
+  geom_boxplot(width = 0.1) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  labs(x = "Estación", y = "Sólidos suspendidos (mg/L)") +
+  ggtitle("Distribución de sólidos suspendidos por estación")
+#mapa de calor
+library(ggplot2)
+library(RColorBrewer)
+install.packages("hexbin")
+library(hexbin)
+ggplot(Coordenadas, aes(x = Longitud, y = Latitud, fill = Media)) +
+  geom_hex() +
+  scale_fill_gradientn(colors = rev(brewer.pal(9, "Spectral"))) +
+  labs(x = "Longitud", y = "Latitud", fill = "Promedio de SS") +
+  theme_bw()
+library(ggplot2)
+library(RColorBrewer)
+library(hexbin)
+ggplot(Coordenadas, aes(x = Longitud, y = Latitud, fill = Media)) +
+  geom_hex(bins = 30) +
+  scale_fill_gradientn(colors = rev(brewer.pal(9, "Blues")), limits = c(16, 200), name = "Concentración de SS") +
+  labs(x = "Longitud", y = "Latitud") +
+  theme_bw() +
+  theme(legend.position = "bottom")
