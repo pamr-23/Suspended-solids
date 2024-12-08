@@ -1,6 +1,6 @@
 -# Suspendends solids 
 This research investigates the behavior of suspended solids in the middle basin of the Cauca River, Valle del Cauca, Colombia.
-
+RSTUDY DATA ANALYSIS 
 Objectives:
 
 Quantify the behavior of suspended solids in the Cauca River from 2009 to 2018.
